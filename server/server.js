@@ -207,6 +207,17 @@ app.get("/completed_courses/:user_email", async (req, res) => {
   res.json(courses);
 });
 
+// Add completed course by user email and course name
+app.post("/completed_course/:user_email/:course_name", async (req, res) => { 
+  const course_grade = req.body.course_grade;
+  const courses = await Database.addCompletedCourseByUserEmailAndCrouseName(
+    req.params.user_email,
+    req.params.course_name,
+    course_grade
+  );
+  res.json(courses);
+});
+
 // Start server
 app.listen(port, () => {
   displayGraphic(port);

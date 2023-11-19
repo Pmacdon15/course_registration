@@ -38,7 +38,7 @@ CREATE TABLE completed_courses (
     user_id INT,
     course_id INT NOT NULL,
     course_code VARCHAR(100) NOT NULL,
-    grade VARCHAR(100) NOT NULL,
+    course_grade VARCHAR(100) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE
 );
@@ -65,7 +65,7 @@ VALUES
     (3, 'DS301-01', 'Machine Learning', 'Fall 2023', 'Introduction to machine learning', 'CS101-01');
 
 
-INSERT INTO completed_courses (user_id, course_id, course_code, grade)
+INSERT INTO completed_courses (user_id, course_id, course_code, course_grade)
 VALUES 
     (2, 1, 'CS101-01', 'A'), 
     (2, 2, 'CS101-02', 'B');

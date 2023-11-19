@@ -333,6 +333,31 @@ class Database {
     }
   }
 
+  // Function to add completed course by user email
+  async addCompletedCourseByUserEmailAndCrouseName(email, course_name, course_grade) {
+    try {
+      const result = await this.pool.request().query(`
+        INSERT INTO ${database}.dbo.completed_courses 
+        (user_id, course_id, course_code, course_grade) 
+        VALUES (
+          (SELECT user_id FROM ${database}.dbo.users WHERE email = '${email}'), 
+          (SELECT course_id FROM ${database}.dbo.courses WHERE course_name = '${course_name}'),
+          (SELECT course_code FROM ${database}.dbo.courses WHERE course_name = '${course_name}'),
+          '${course_grade}'
+        )
+      `);
+  
+      if (result.rowsAffected[0] === 1) {
+        console.log("Completed course added successfully");
+      }
+  
+      return result.recordset;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
+
 
 
 }
