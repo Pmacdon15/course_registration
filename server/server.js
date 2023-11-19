@@ -74,14 +74,6 @@ app.get("/programs", async (req, res) => {
   res.json(programs);
 });
 
-// Get courses by program name
-app.get("/courses/:program_name", async (req, res) => {
-  const courses = await Database.getCoursesByProgramName(
-    req.params.program_name
-  );
-  res.json(courses);
-});
-
 // Add program
 app.post("/program", async (req, res) => {
   const {
@@ -102,6 +94,37 @@ app.post("/program", async (req, res) => {
   );
   res.json(programs);
 });
+
+// Edit program
+app.put("/program/:program_name", async (req, res) => {
+  const {    
+    program_code,
+    new_program_name,
+    program_fees,
+    program_start_date,
+    program_end_date,
+    program_type,
+  } = req.body;
+  const programs = await Database.editProgram(
+    req.params.program_name,
+    new_program_name,
+    program_code,
+    program_fees,
+    program_start_date,
+    program_end_date,
+    program_type
+  );
+  res.json(programs);
+});
+
+// Get courses by program name
+app.get("/courses/:program_name", async (req, res) => {
+  const courses = await Database.getCoursesByProgramName(
+    req.params.program_name
+  );
+  res.json(courses);
+});
+
 
 // Start server
 app.listen(port, () => {

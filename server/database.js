@@ -145,7 +145,31 @@ class Database {
       console.log(error);
     }
   }
+
+  // Function to edit program
+  async editProgram(program_name, new_program_name, program_code, program_fees, program_start_date, program_end_date, program_type) {
+    try {
+      const result = await this.pool
+        .request()
+        .query(`
+          UPDATE ${database}.dbo.programs 
+          SET program_name = '${new_program_name}', program_code = '${program_code}', program_fees = ${program_fees}, program_start_date = '${program_start_date}', program_end_date = '${program_end_date}', program_type = '${program_type}'
+          WHERE program_name = '${program_name}'
+        `);
   
+      if (result.rowsAffected[0] === 1) {
+        console.log("Program edited successfully");
+      }
+  
+      return result.recordset;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
+
+
+  // Function to get courses by program name  
   async getCoursesByProgramName(program_name) {
     try {
       const result = await this.pool

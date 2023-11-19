@@ -5,7 +5,7 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-rl.question("Enter the word to change: ", (wordsToChange) => {
+rl.question("Enter the words to change: ", (wordsToChange) => {
   const codedUri = encodeURIComponent(wordsToChange);
   console.log(codedUri);
 
