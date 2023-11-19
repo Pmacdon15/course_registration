@@ -28,7 +28,11 @@ Database.connectToDatabase();
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const users = await Database.login(email, password);
-  res.json(users);
+  if (users === null || users === undefined) {
+    res.json({ message: "Invalid email or password" });
+  } else {
+    res.json(users);
+  }
 });
 
 // Register user
@@ -40,7 +44,11 @@ app.post("/user", async (req, res) => {
     last_name,
     password
   );
-  res.json(users);
+  if (users === null || users === undefined) {
+    res.json({ message: "Invalid email or password" });
+  } else {
+    res.json(users);
+  }
 });
 
 // Register admin user
@@ -208,7 +216,7 @@ app.get("/completed_courses/:user_email", async (req, res) => {
 });
 
 // Add completed course by user email and course name
-app.post("/completed_course/:user_email/:course_name", async (req, res) => { 
+app.post("/completed_course/:user_email/:course_name", async (req, res) => {
   const course_grade = req.body.course_grade;
   const courses = await Database.addCompletedCourseByUserEmailAndCrouseName(
     req.params.user_email,

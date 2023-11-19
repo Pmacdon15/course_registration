@@ -40,7 +40,21 @@ class Database {
           `SELECT * FROM ${database}.dbo.users WHERE email= '${email}' AND password = '${password}'`
         );
       delete result.recordset[0].password;
-      console.dir(result.recordset);
+      //console.dir(result.recordset);
+      console.log("User logged in successfully");
+      return result.recordset;
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+  // Function to get userinfo by email
+  async getUserInfoByEmail(email) {
+    try {
+      const result = await this.pool
+        .request()
+        .query(`SELECT * FROM ${database}.dbo.users WHERE email = '${email}'`);
       return result.recordset;
     } catch (error) {
       console.log(error);
@@ -57,8 +71,11 @@ class Database {
         );
       if (result.rowsAffected[0] === 1) {
         console.log("User registered successfully");
-      }
-      return result.recordset;
+      }    
+      const user = await this.getUserInfoByEmail(email);
+
+      delete user[0].password;
+      return user;
     } catch (error) {
       console.log(error);
     }
@@ -356,10 +373,6 @@ class Database {
       console.log(error);
     }
   }
-  
-
-
-
 }
 
 module.exports = new Database();
