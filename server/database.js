@@ -275,6 +275,35 @@ class Database {
       console.log(error);
     }
   }
+
+  // Function to edit course by name
+  async editCourseByCourseName(
+    course_name,
+    new_course_name,
+    course_code,
+    course_term,
+    course_description,
+    course_prerequisites
+  ) {
+    try {
+      const result = await this.pool.request().query(`
+          UPDATE ${database}.dbo.courses 
+          SET course_name = '${new_course_name}', course_code = '${course_code}', course_term = '${course_term}', course_description = '${course_description}', course_prerequisites = '${course_prerequisites}'
+          WHERE course_name = '${course_name}'
+        `);
+
+      if (result.rowsAffected[0] === 1) {
+        console.log("Course edited successfully");
+      }
+
+      return result.recordset;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+
 }
 
 module.exports = new Database();

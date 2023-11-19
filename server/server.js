@@ -171,6 +171,26 @@ app.post("/course/:program_name", async (req, res) => {
   res.json(courses);
 });
 
+// Edit course by course name
+app.put("/course/:course_name", async (req, res) => {
+  const {
+    course_code,
+    new_course_name,
+    course_term,
+    course_description,
+    course_prerequisites,
+  } = req.body;
+  const courses = await Database.editCourseByCourseName(
+    req.params.course_name,
+    new_course_name,
+    course_code,
+    course_term,
+    course_description,
+    course_prerequisites
+  );
+  res.json(courses);
+});
+
 // Start server
 app.listen(port, () => {
   // displayGraphic(port);
