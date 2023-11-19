@@ -199,6 +199,14 @@ app.delete("/course/:course_name", async (req, res) => {
   res.json(courses);
 });
 
+// Get completed courses by user email
+app.get("/completed_courses/:user_email", async (req, res) => {
+  const courses = await Database.getCompletedCoursesByUserEmail(
+    req.params.user_email
+  );
+  res.json(courses);
+});
+
 // Start server
 app.listen(port, () => {
   displayGraphic(port);

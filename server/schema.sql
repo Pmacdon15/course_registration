@@ -36,7 +36,7 @@ CREATE TABLE courses (
 CREATE TABLE completed_courses (
     completed_course_id INT IDENTITY(1,1) PRIMARY KEY,
     user_id INT,
-    course_id INT,
+    course_id INT NOT NULL,
     course_code VARCHAR(100) NOT NULL,
     grade VARCHAR(100) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
@@ -57,11 +57,16 @@ VALUES
     ('Data Science', 'DS301', 5500, '2023-03-01', '2023-12-31', 'Master');
 
 -- Dummy data for the 'courses' table
-INSERT INTO courses (program_id, course_code, course_name, course_term, course_description, prerequisites)
+INSERT INTO courses (program_id, course_code, course_name, course_term, course_description, course_prerequisites)
 VALUES 
     (1, 'CS101-01', 'Introduction to Programming', 'Fall 2023', 'Learn the basics of programming', NULL),
     (1, 'CS101-02', 'Database Management', 'Fall 2023', 'Introduction to database systems', 'CS101-01'),
     (2, 'BA201-01', 'Marketing Fundamentals', 'Spring 2023', 'Principles of marketing', NULL),
     (3, 'DS301-01', 'Machine Learning', 'Fall 2023', 'Introduction to machine learning', 'CS101-01');
 
+
+INSERT INTO completed_courses (user_id, course_id, course_code, grade)
+VALUES 
+    (2, 1, 'CS101-01', 'A'), 
+    (2, 2, 'CS101-02', 'B');
 

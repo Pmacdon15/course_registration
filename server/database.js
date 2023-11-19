@@ -319,6 +319,20 @@ class Database {
     }
   }
 
+  // Function to get completed courses by user email
+  async getCompletedCoursesByUserEmail(email) {
+    try {
+      const result = await this.pool
+        .request()
+        .query(
+          `SELECT * FROM ${database}.dbo.completed_courses WHERE user_id IN (SELECT user_id FROM ${database}.dbo.users WHERE email = '${email}')`
+        );
+      return result.recordset;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
 
 }
