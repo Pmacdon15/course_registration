@@ -45,7 +45,6 @@ class Database {
       return result.recordset;
     } catch (error) {
       console.log(error);
-      
     }
   }
 
@@ -71,7 +70,7 @@ class Database {
         );
       if (result.rowsAffected[0] === 1) {
         console.log("User registered successfully");
-      }    
+      }
       const user = await this.getUserInfoByEmail(email);
 
       delete user[0].password;
@@ -94,7 +93,7 @@ class Database {
       }
       const user = await this.getUserInfoByEmail(email);
       delete user[0].password;
-      return user;      
+      return user;
     } catch (error) {
       console.log(error);
     }
@@ -112,9 +111,9 @@ class Database {
         console.log("Password updated successfully");
       }
       const user = await this.getUserInfoByEmail(email);
-      delete user[0].password;      
+      delete user[0].password;
       //user[0].message = "Password updated successfully";
-      return user;      
+      return user;
     } catch (error) {
       console.log(error);
     }
@@ -122,13 +121,16 @@ class Database {
   // Function to delete user
   async deleteUser(email) {
     try {
-      const result = await pool
+      const user = await this.getUserInfoByEmail(email);
+      delete user[0].password;
+      const result = await this.pool
         .request()
         .query(`DELETE FROM ${database}.dbo.users WHERE email = '${email}'`);
       if (result.rowsAffected[0] === 1) {
         console.log("User deleted successfully");
       }
-      return result.recordset;
+      
+      return user;
     } catch (error) {
       console.log(error);
     }
@@ -356,7 +358,11 @@ class Database {
   }
 
   // Function to add completed course by user email
-  async addCompletedCourseByUserEmailAndCrouseName(email, course_name, course_grade) {
+  async addCompletedCourseByUserEmailAndCrouseName(
+    email,
+    course_name,
+    course_grade
+  ) {
     try {
       const result = await this.pool.request().query(`
         INSERT INTO ${database}.dbo.completed_courses 
@@ -368,11 +374,11 @@ class Database {
           '${course_grade}'
         )
       `);
-  
+
       if (result.rowsAffected[0] === 1) {
         console.log("Completed course added successfully");
       }
-  
+
       return result.recordset;
     } catch (error) {
       console.log(error);

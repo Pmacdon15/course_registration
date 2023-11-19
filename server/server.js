@@ -81,7 +81,11 @@ app.put("/user/:email", async (req, res) => {
 // Delete user
 app.delete("/user/:email", async (req, res) => {
   const users = await Database.deleteUser(req.params.email);
-  res.json(users);
+  if (users === null || users === undefined) {
+    res.json({ message: "User not deleted." });
+  } else {
+    res.json(users);
+  }
 });
 
 // Get all programs
