@@ -64,6 +64,12 @@ app.get("/programs", async (req, res) => {
   res.json(programs);
 });
 
+// Get courses by program name
+app.get("/courses/:program_name", async (req, res) => {
+  const courses = await Database.getCoursesByProgramName(req.params.program_name);
+  res.json(courses);
+});
+
 // Start server
 app.listen(port, () => {
   // displayGraphic(port);

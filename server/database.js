@@ -3,11 +3,10 @@ const dotenv = require("dotenv");
 const path = require("path");
 
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
-const database = process.env.MSSQL_DATABASE
+const database = process.env.MSSQL_DATABASE;
 
 class Database {
   constructor() {
-   
     const config = {
       user: process.env.MSSQL_USER,
       password: process.env.MSSQL_PASSWORD,
@@ -118,13 +117,23 @@ class Database {
     try {
       const result = await this.pool
         .request()
-        .query(`SELECT * FROM course_registration.dbo.programs`);
+        .query(`SELECT * FROM ${database}.dbo.programs`);
+      return result.recordset;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getCoursesByProgramName(program_name) {
+    try {
+      const result = await this.pool
+        .request()
+        .query(`SELECT * FROM ${database}.dbo.courses WHERE program_id IN (SELECT program_id FROM ${database}.dbo.programs WHERE program_name = '${program_name}')`);
       return result.recordset;
     } catch (error) {
       console.log(error);
     }
   }
 }
-
+  
 module.exports = new Database();
-
