@@ -124,6 +124,28 @@ class Database {
     }
   }
 
+  // Function to add program
+  async addProgram(program_name, program_code, program_fees, program_start_date, program_end_date, program_type) {
+    try {
+      const result = await this.pool
+        .request()
+        .query(`
+          INSERT INTO ${database}.dbo.programs 
+          (program_name, program_code, program_fees, program_start_date, program_end_date, program_type) 
+          VALUES 
+          ('${program_name}', '${program_code}', ${program_fees}, '${program_start_date}', '${program_end_date}', '${program_type}')
+        `);
+  
+      if (result.rowsAffected[0] === 1) {
+        console.log("Program added successfully");
+      }
+  
+      return result.recordset;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
   async getCoursesByProgramName(program_name) {
     try {
       const result = await this.pool

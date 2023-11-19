@@ -34,14 +34,24 @@ app.post("/login", async (req, res) => {
 // Register user
 app.post("/user", async (req, res) => {
   const { email, first_name, last_name, password } = req.body;
-  const users = await Database.registerUser(email, first_name, last_name, password);
+  const users = await Database.registerUser(
+    email,
+    first_name,
+    last_name,
+    password
+  );
   res.json(users);
 });
 
 // Register admin user
 app.post("/userAdmin", async (req, res) => {
   const { email, first_name, last_name, password } = req.body;
-  const users = await Database.registerUserAdmin(email, first_name, last_name, password);
+  const users = await Database.registerUserAdmin(
+    email,
+    first_name,
+    last_name,
+    password
+  );
   res.json(users);
 });
 
@@ -66,8 +76,31 @@ app.get("/programs", async (req, res) => {
 
 // Get courses by program name
 app.get("/courses/:program_name", async (req, res) => {
-  const courses = await Database.getCoursesByProgramName(req.params.program_name);
+  const courses = await Database.getCoursesByProgramName(
+    req.params.program_name
+  );
   res.json(courses);
+});
+
+// Add program
+app.post("/program", async (req, res) => {
+  const {
+    program_name,
+    program_code,
+    program_fees,
+    program_start_date,
+    program_end_date,
+    program_type,
+  } = req.body;
+  const programs = await Database.addProgram(
+    program_name,
+    program_code,
+    program_fees,
+    program_start_date,
+    program_end_date,
+    program_type
+  );
+  res.json(programs);
 });
 
 // Start server
