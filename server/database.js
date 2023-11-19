@@ -3,14 +3,16 @@ const dotenv = require("dotenv");
 const path = require("path");
 
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
+const database = process.env.MSSQL_DATABASE
 
 class Database {
   constructor() {
+   
     const config = {
       user: process.env.MSSQL_USER,
       password: process.env.MSSQL_PASSWORD,
       server: process.env.MSSQL_HOST,
-      database: process.env.MSSQL_DATABASE,
+      database: database,
       options: {
         encrypt: true,
         trustServerCertificate: true,
@@ -36,7 +38,7 @@ class Database {
       const result = await this.pool
         .request()
         .query(
-          `SELECT * FROM ${process.env.MSSQL_DATABASE}.dbo.users WHERE email= '${email}' AND password = '${password}'`
+          `SELECT * FROM ${database}.dbo.users WHERE email= '${email}' AND password = '${password}'`
         );
       delete result.recordset[0].password;
       console.dir(result.recordset);
@@ -52,7 +54,7 @@ class Database {
       const result = await this.pool
         .request()
         .query(
-          `INSERT INTO ${process.env.MSSQL_DATABASE}.dbo.users (email, first_name, last_name, password, admin) VALUES ('${email}', '${first_name}', '${last_name}', '${password}', 'false' )`
+          `INSERT INTO ${database}.dbo.users (email, first_name, last_name, password, admin) VALUES ('${email}', '${first_name}', '${last_name}', '${password}', 'false' )`
         );
       if (result.rowsAffected[0] === 1) {
         console.log("User registered successfully");
@@ -69,7 +71,7 @@ class Database {
       const result = await this.pool
         .request()
         .query(
-          `INSERT INTO ${process.env.MSSQL_DATABASE}.dbo.users (email, first_name, last_name, password, admin) VALUES ('${email}', '${first_name}', '${last_name}', '${password}', 'true' )`
+          `INSERT INTO ${database}.dbo.users (email, first_name, last_name, password, admin) VALUES ('${email}', '${first_name}', '${last_name}', '${password}', 'true' )`
         );
       if (result.rowsAffected[0] === 1) {
         console.log("Admin registered successfully");
@@ -86,7 +88,7 @@ class Database {
       const result = await this.pool
         .request()
         .query(
-          `UPDATE ${process.env.MSSQL_DATABASE}.dbo.users SET password = '${new_password}' WHERE email = '${email}'`
+          `UPDATE ${database}.dbo.users SET password = '${new_password}' WHERE email = '${email}'`
         );
       if (result.rowsAffected[0] === 1) {
         console.log("Password updated successfully");
@@ -101,7 +103,7 @@ class Database {
     try {
       const result = await pool
         .request()
-        .query(`DELETE FROM ${process.env.MSSQL_DATABASE}.dbo.users WHERE email = '${email}'`);
+        .query(`DELETE FROM ${database}.dbo.users WHERE email = '${email}'`);
       if (result.rowsAffected[0] === 1) {
         console.log("User deleted successfully");
       }
