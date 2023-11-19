@@ -137,6 +137,12 @@ app.get("/courses", async (req, res) => {
   res.json(courses);
 });
 
+// Get course by course name
+app.get("/course/:course_name", async (req, res) => {
+  const courses = await Database.getCourseByCourseName(req.params.course_name);
+  res.json(courses);
+});
+
 // Get courses by program name
 app.get("/courses/:program_name", async (req, res) => {
   const courses = await Database.getCoursesByProgramName(

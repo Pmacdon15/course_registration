@@ -221,6 +221,20 @@ class Database {
     }
   }
 
+  // Function to get course by course name
+  async getCourseByCourseName(course_name) {
+    try {
+      const result = await this.pool
+        .request()
+        .query(
+          `SELECT * FROM ${database}.dbo.courses WHERE course_name = '${course_name}'`
+        );
+      return result.recordset;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   // Function to get courses by program name
   async getCoursesByProgramName(program_name) {
     try {
