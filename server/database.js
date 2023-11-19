@@ -181,8 +181,18 @@ class Database {
       console.log(error);
     }
   }
-  
 
+  // Function to get all courses
+  async getCourses() {
+    try {
+      const result = await this.pool
+        .request()
+        .query(`SELECT * FROM ${database}.dbo.courses`);
+      return result.recordset;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   // Function to get courses by program name  
   async getCoursesByProgramName(program_name) {

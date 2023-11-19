@@ -123,6 +123,12 @@ app.delete("/program/:program_name", async (req, res) => {
   res.json(programs);
 });
 
+// Get all courses
+app.get("/courses", async (req, res) => {
+  const courses = await Database.getCourses();
+  res.json(courses);
+});
+
 // Get courses by program name
 app.get("/courses/:program_name", async (req, res) => {
   const courses = await Database.getCoursesByProgramName(
