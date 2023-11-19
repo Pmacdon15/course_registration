@@ -45,7 +45,7 @@ app.post("/user", async (req, res) => {
     password
   );
   if (users === null || users === undefined) {
-    res.json({ message: "Invalid email or password" });
+    res.json({ message: "User not created" });
   } else {
     res.json(users);
   }
@@ -60,7 +60,11 @@ app.post("/userAdmin", async (req, res) => {
     last_name,
     password
   );
-  res.json(users);
+  if (users === null || users === undefined) {
+    res.json({ message: "User not created." });
+  } else {
+    res.json(users);
+  }
 });
 
 // Update password

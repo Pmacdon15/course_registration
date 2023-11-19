@@ -92,7 +92,9 @@ class Database {
       if (result.rowsAffected[0] === 1) {
         console.log("Admin registered successfully");
       }
-      return result.recordset;
+      const user = await this.getUserInfoByEmail(email);
+      delete user[0].password;
+      return user;      
     } catch (error) {
       console.log(error);
     }
