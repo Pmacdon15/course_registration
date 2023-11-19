@@ -120,7 +120,11 @@ app.post("/program", async (req, res) => {
     program_end_date,
     program_type
   );
-  res.json(programs);
+  if (programs === null || programs === undefined) {
+    res.json({ message: "Program not created." });
+  } else {
+    res.json(programs);
+  }
 });
 
 // Edit program

@@ -182,8 +182,9 @@ class Database {
       if (result.rowsAffected[0] === 1) {
         console.log("Program added successfully");
       }
+      const program = await this.getProgramByProgramName(program_name);
 
-      return result.recordset;
+      return program;
     } catch (error) {
       console.log(error);
     }
