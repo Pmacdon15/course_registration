@@ -117,6 +117,12 @@ app.put("/program/:program_name", async (req, res) => {
   res.json(programs);
 });
 
+// Delete program
+app.delete("/program/:program_name", async (req, res) => {
+  const programs = await Database.deleteProgram(req.params.program_name);
+  res.json(programs);
+});
+
 // Get courses by program name
 app.get("/courses/:program_name", async (req, res) => {
   const courses = await Database.getCoursesByProgramName(

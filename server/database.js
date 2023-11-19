@@ -166,6 +166,21 @@ class Database {
       console.log(error);
     }
   }
+
+  // Function to delete program
+  async deleteProgram(program_name) {
+    try {
+      const result = await this.pool
+        .request()
+        .query(`DELETE FROM ${database}.dbo.programs WHERE program_name = '${program_name}'`);
+      if (result.rowsAffected[0] === 1) {
+        console.log("Program deleted successfully");
+      }
+      return result.recordset;
+    } catch (error) {
+      console.log(error);
+    }
+  }
   
 
 
