@@ -74,6 +74,14 @@ app.get("/programs", async (req, res) => {
   res.json(programs);
 });
 
+// Get program by program name
+app.get("/program/:program_name", async (req, res) => {
+  const programs = await Database.getProgramByProgramName(
+    req.params.program_name
+  );
+  res.json(programs);
+});
+
 // Add program
 app.post("/program", async (req, res) => {
   const {

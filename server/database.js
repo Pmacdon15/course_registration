@@ -124,6 +124,20 @@ class Database {
     }
   }
 
+  // Function to get program by program name
+  async getProgramByProgramName(program_name) {
+    try {
+      const result = await this.pool
+        .request()
+        .query(
+          `SELECT * FROM ${database}.dbo.programs WHERE program_name = '${program_name}'`
+        );
+      return result.recordset;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   // Function to add program
   async addProgram(
     program_name,
