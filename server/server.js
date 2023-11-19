@@ -6,8 +6,8 @@ const cors = require("cors");
 // Import functions from database.js
 const Database = require("./database.js");
 
-// Import function from graphic.js
-//const { displayGraphic } = require("./graphic");
+// Import function from graphic.js for server output
+const { displayGraphic } = require("./graphic");
 
 // Middleware
 app.use(express.json());
@@ -193,6 +193,6 @@ app.put("/course/:course_name", async (req, res) => {
 
 // Start server
 app.listen(port, () => {
-  // displayGraphic(port);
-  console.log(`Server is running on port: ${port}`);
+  displayGraphic(port);
+  //console.log(`Server is running on port: ${port}`);
 });
