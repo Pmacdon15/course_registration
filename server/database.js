@@ -302,6 +302,23 @@ class Database {
     }
   }
 
+  // Function to delete course by name
+  async deleteCourseByCourseName(course_name) {
+    try {
+      const result = await this.pool
+        .request()
+        .query(
+          `DELETE FROM ${database}.dbo.courses WHERE course_name = '${course_name}'`
+        );
+      if (result.rowsAffected[0] === 1) {
+        console.log("Course deleted successfully");
+      }
+      return result.recordset;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
 
 }

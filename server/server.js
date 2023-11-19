@@ -191,6 +191,14 @@ app.put("/course/:course_name", async (req, res) => {
   res.json(courses);
 });
 
+// Delete course by course name
+app.delete("/course/:course_name", async (req, res) => {
+  const courses = await Database.deleteCourseByCourseName(
+    req.params.course_name
+  );
+  res.json(courses);
+});
+
 // Start server
 app.listen(port, () => {
   displayGraphic(port);
