@@ -71,7 +71,11 @@ app.post("/userAdmin", async (req, res) => {
 app.put("/user/:email", async (req, res) => {
   const { new_password } = req.body;
   const users = await Database.updatePassword(req.params.email, new_password);
-  res.json(users);
+  if (users === null || users === undefined) {
+    res.json({ message: "Password not updated." });
+  } else {
+    res.json(users);
+  }
 });
 
 // Delete user

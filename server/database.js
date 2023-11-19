@@ -111,7 +111,10 @@ class Database {
       if (result.rowsAffected[0] === 1) {
         console.log("Password updated successfully");
       }
-      return result.recordset;
+      const user = await this.getUserInfoByEmail(email);
+      delete user[0].password;      
+      //user[0].message = "Password updated successfully";
+      return user;      
     } catch (error) {
       console.log(error);
     }
