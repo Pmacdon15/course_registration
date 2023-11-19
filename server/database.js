@@ -112,6 +112,19 @@ class Database {
       console.log(error);
     }
   }
+
+  // Function to get all programs
+  async getPrograms() {
+    try {
+      const result = await this.pool
+        .request()
+        .query(`SELECT * FROM course_registration.dbo.programs`);
+      return result.recordset;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 module.exports = new Database();
+

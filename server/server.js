@@ -58,6 +58,12 @@ app.delete("/user/:email", async (req, res) => {
   res.json(users);
 });
 
+// Get all programs
+app.get("/programs", async (req, res) => {
+  const programs = await Database.getPrograms();
+  res.json(programs);
+});
+
 // Start server
 app.listen(port, () => {
   // displayGraphic(port);

@@ -1,7 +1,7 @@
-CREATE DATABASE database_name;
+CREATE DATABASE course_registration;
 GO
 
-USE database_name;
+USE course_registration;
 GO
 
 CREATE TABLE users (
@@ -13,7 +13,7 @@ CREATE TABLE users (
     admin BIT NOT NULL
 );
 
-CREATE TABLE program (
+CREATE TABLE programs (
     program_id INT IDENTITY(1,1) PRIMARY KEY,
     program_name VARCHAR(100) UNIQUE NOT NULL,
     program_code VARCHAR(100) UNIQUE NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE program (
 
 CREATE TABLE courses (
     course_id INT IDENTITY(1,1) PRIMARY KEY,
-    program_id INT FOREIGN KEY REFERENCES program(program_id) ON DELETE CASCADE, 
+    program_id INT FOREIGN KEY REFERENCES programs(program_id) ON DELETE CASCADE, 
     course_code VARCHAR(100) UNIQUE NOT NULL,
     name VARCHAR(100) NOT NULL,
     term VARCHAR(100) NOT NULL,
@@ -50,7 +50,7 @@ VALUES
 
 -- Dummy data for the 'program' table
 
-INSERT INTO program (program_name, program_code, program_fees, program_start_date, program_end_date, program_type)
+INSERT INTO programs (program_name, program_code, program_fees, program_start_date, program_end_date, program_type)
 VALUES 
     ('Computer Science', 'CS101', 5000, '2023-01-01', '2023-12-31', 'Bachelor'),
     ('Business Administration', 'BA201', 6000, '2023-02-01', '2023-12-31', 'Bachelor'),
