@@ -125,21 +125,26 @@ class Database {
   }
 
   // Function to add program
-  async addProgram(program_name, program_code, program_fees, program_start_date, program_end_date, program_type) {
+  async addProgram(
+    program_name,
+    program_code,
+    program_fees,
+    program_start_date,
+    program_end_date,
+    program_type
+  ) {
     try {
-      const result = await this.pool
-        .request()
-        .query(`
+      const result = await this.pool.request().query(`
           INSERT INTO ${database}.dbo.programs 
           (program_name, program_code, program_fees, program_start_date, program_end_date, program_type) 
           VALUES 
           ('${program_name}', '${program_code}', ${program_fees}, '${program_start_date}', '${program_end_date}', '${program_type}')
         `);
-  
+
       if (result.rowsAffected[0] === 1) {
         console.log("Program added successfully");
       }
-  
+
       return result.recordset;
     } catch (error) {
       console.log(error);
@@ -147,20 +152,26 @@ class Database {
   }
 
   // Function to edit program
-  async editProgram(program_name, new_program_name, program_code, program_fees, program_start_date, program_end_date, program_type) {
+  async editProgram(
+    program_name,
+    new_program_name,
+    program_code,
+    program_fees,
+    program_start_date,
+    program_end_date,
+    program_type
+  ) {
     try {
-      const result = await this.pool
-        .request()
-        .query(`
+      const result = await this.pool.request().query(`
           UPDATE ${database}.dbo.programs 
           SET program_name = '${new_program_name}', program_code = '${program_code}', program_fees = ${program_fees}, program_start_date = '${program_start_date}', program_end_date = '${program_end_date}', program_type = '${program_type}'
           WHERE program_name = '${program_name}'
         `);
-  
+
       if (result.rowsAffected[0] === 1) {
         console.log("Program edited successfully");
       }
-  
+
       return result.recordset;
     } catch (error) {
       console.log(error);
@@ -172,7 +183,9 @@ class Database {
     try {
       const result = await this.pool
         .request()
-        .query(`DELETE FROM ${database}.dbo.programs WHERE program_name = '${program_name}'`);
+        .query(
+          `DELETE FROM ${database}.dbo.programs WHERE program_name = '${program_name}'`
+        );
       if (result.rowsAffected[0] === 1) {
         console.log("Program deleted successfully");
       }
@@ -194,17 +207,46 @@ class Database {
     }
   }
 
-  // Function to get courses by program name  
+  // Function to get courses by program name
   async getCoursesByProgramName(program_name) {
     try {
       const result = await this.pool
         .request()
-        .query(`SELECT * FROM ${database}.dbo.courses WHERE program_id IN (SELECT program_id FROM ${database}.dbo.programs WHERE program_name = '${program_name}')`);
+        .query(
+          `SELECT * FROM ${database}.dbo.courses WHERE program_id IN (SELECT program_id FROM ${database}.dbo.programs WHERE program_name = '${program_name}')`
+        );
+      return result.recordset;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Function to add course by program name
+  async addCourseByProgramName(
+    program_name,
+    course_code,
+    course_name,
+    course_term,
+    course_description,
+    course_prerequisites
+  ) {
+    try {
+      const result = await this.pool.request().query(`
+          INSERT INTO ${database}.dbo.courses 
+          (program_id, course_code, course_name, course_term, course_description, course_prerequisites) 
+          VALUES 
+          ((SELECT program_id FROM ${database}.dbo.programs WHERE program_name = '${program_name}'), '${course_code}', '${course_name}', '${course_term}', '${course_description}', '${course_prerequisites}')
+        `);
+
+      if (result.rowsAffected[0] === 1) {
+        console.log("Course added successfully");
+      }
+
       return result.recordset;
     } catch (error) {
       console.log(error);
     }
   }
 }
-  
+
 module.exports = new Database();

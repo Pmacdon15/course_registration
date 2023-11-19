@@ -97,7 +97,7 @@ app.post("/program", async (req, res) => {
 
 // Edit program
 app.put("/program/:program_name", async (req, res) => {
-  const {    
+  const {
     program_code,
     new_program_name,
     program_fees,
@@ -137,6 +137,25 @@ app.get("/courses/:program_name", async (req, res) => {
   res.json(courses);
 });
 
+// Add course by program name
+app.post("/course/:program_name", async (req, res) => {
+  const {
+    course_code,
+    course_name,
+    course_term,
+    course_description,
+    course_prerequisites,
+  } = req.body;
+  const courses = await Database.addCourseByProgramName(
+    req.params.program_name,
+    course_code,
+    course_name,
+    course_term,
+    course_description,
+    course_prerequisites
+  );
+  res.json(courses);
+});
 
 // Start server
 app.listen(port, () => {
