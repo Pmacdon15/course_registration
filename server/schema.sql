@@ -39,8 +39,8 @@ CREATE TABLE completed_courses (
     course_id INT NOT NULL,
     course_code VARCHAR(100) NOT NULL,
     course_grade INT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) NOT NULL REFERENCES courses(course_id) ON DELETE CASCADE
 );
 
 INSERT INTO users (email, first_name, last_name, password, admin) 
