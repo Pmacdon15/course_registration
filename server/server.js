@@ -200,7 +200,11 @@ app.post("/course/:program_name", async (req, res) => {
     course_description,
     course_prerequisites
   );
+  if (courses === null || courses === undefined) {
+    res.json({ message: "Course not created." });
+  } else {
   res.json(courses);
+  }
 });
 
 // Edit course by course name

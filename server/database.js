@@ -283,20 +283,37 @@ class Database {
     course_prerequisites
   ) {
     try {
-      const result = await this.pool.request().query(`
-          INSERT INTO ${database}.dbo.courses 
-          (program_id, course_code, course_name, course_term, course_description, course_prerequisites) 
-          VALUES 
-          ((SELECT program_id FROM ${database}.dbo.programs WHERE program_name = '${program_name}'), '${course_code}', '${course_name}', '${course_term}', '${course_description}', '${course_prerequisites}')
-        `);
+      // Step 1: Check if the program_name exists
+      const programResult = await this.pool.request().query(`
+      SELECT program_id FROM ${database}.dbo.programs WHERE program_name = '${program_name}'
+    `);
 
-      if (result.rowsAffected[0] === 1) {
-        console.log("Course added successfully");
+      // Step 2: If program_name exists, retrieve program_id and insert into courses table
+      if (programResult.recordset.length > 0) {
+        const program_id = programResult.recordset[0].program_id;
+
+        // Step 3: Insert into courses table
+        const result = await this.pool.request().query(`
+        INSERT INTO ${database}.dbo.courses 
+        (program_id, course_code, course_name, course_term, course_description, course_prerequisites) 
+        VALUES 
+        (${program_id}, '${course_code}', '${course_name}', '${course_term}', '${course_description}', '${course_prerequisites}')
+      `);
+
+        // Step 4: Check if the insertion was successful
+        if (result.rowsAffected[0] === 1) {
+          console.log("Course added successfully");
+          const course = await this.getCourseByCourseName(course_name);
+          return course;
+        }
+      } else {
+        // Handle the case where program_name is not found (e.g., throw an error)
+        throw new Error(
+          `Program with name '${program_name}' not found in the database.`
+        );
       }
-
-      return result.recordset;
     } catch (error) {
-      console.log(error);
+      console.error("Error:", error.message);
     }
   }
 
