@@ -335,9 +335,9 @@ class Database {
 
       if (result.rowsAffected[0] === 1) {
         console.log("Course edited successfully");
-      }
-
-      return result.recordset;
+        const course = await this.getCourseByCourseName(new_course_name);
+        return course;
+      }      
     } catch (error) {
       console.log(error);
     }
