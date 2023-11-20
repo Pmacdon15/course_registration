@@ -9,6 +9,7 @@ This is a simple app to simulate course registration at a college or university.
 - [Requirements](#Requirements)
 - [Database](#Database)
 - [Startup](#Startup)
+- [DevHelp](#DevHelp)
 
 ## Installation
 
@@ -80,5 +81,22 @@ npm start
 
 The server is now running. You can contact the app at localhost:3000/ or using your public Ip address after applying the appropriate port forwarding to your router.
 
-> [!IMPORTANT]
->This is an empty project so far.
+## DevHelp
+
+There is a file called codedURI.js that takes the last thing you have copied and encodes it to remove spaces in the url in away that the computer can read. This is useful for using backend apis when the word or name has spaces in it.
+
+simply run:
+
+```bash
+
+cd server
+
+```
+
+```bash
+
+node codedURI.js
+
+```
+
+simple paste the encoded uri in to the api address.

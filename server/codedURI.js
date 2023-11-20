@@ -1,18 +1,16 @@
-const readline = require('readline');
 const copyPaste = require('copy-paste');
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
-rl.question("Enter the words to change: ", (wordsToChange) => {
+// Read from the clipboard
+copyPaste.paste((err, wordsToChange) => {
+  if (err) {
+    console.error('Error reading from clipboard:', err);
+    return;
+  }
   const codedUri = encodeURIComponent(wordsToChange);
-  console.log(codedUri);
+  console.log("Words to change: "+ wordsToChange);
+  console.log("Coded URI: "+ codedUri);
 
   // Copy the encoded URI to the clipboard
   copyPaste.copy(codedUri);
   console.log('Encoded URI copied to clipboard.');
-
-  rl.close();
 });
