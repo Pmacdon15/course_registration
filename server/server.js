@@ -259,7 +259,11 @@ app.post("/completed_course/:user_email/:course_name", async (req, res) => {
     req.params.course_name,
     course_grade
   );
-  res.json(courses);
+  if (courses === null || courses === undefined) {
+    res.json({ message: "Course not added." });
+  } else {
+    res.json(courses);
+  }
 });
 
 // Start server

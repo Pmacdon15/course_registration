@@ -398,9 +398,9 @@ class Database {
 
       if (result.rowsAffected[0] === 1) {
         console.log("Completed course added successfully");
-      }
-
-      return result.recordset;
+        const completedCourse = await this.getCompletedCoursesByUserEmail(email);
+        return completedCourse;          
+      }      
     } catch (error) {
       console.log(error);
     }
