@@ -156,7 +156,11 @@ app.put("/program/:program_name", async (req, res) => {
 // Delete program
 app.delete("/program/:program_name", async (req, res) => {
   const programs = await Database.deleteProgram(req.params.program_name);
-  res.json(programs);
+  if (programs === null || programs === undefined) {
+    res.json({ message: "Program not deleted." });
+  } else {
+    res.json(programs);
+  }
 });
 
 // Get all courses

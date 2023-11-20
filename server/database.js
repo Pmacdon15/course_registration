@@ -217,6 +217,7 @@ class Database {
   // Function to delete program
   async deleteProgram(program_name) {
     try {
+      const program = await this.getProgramByProgramName(program_name);
       const result = await this.pool
         .request()
         .query(
@@ -224,6 +225,7 @@ class Database {
         );
       if (result.rowsAffected[0] === 1) {
         console.log("Program deleted successfully");
+        return program;
       }
       return result.recordset;
     } catch (error) {
