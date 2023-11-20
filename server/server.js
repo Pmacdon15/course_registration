@@ -236,7 +236,11 @@ app.delete("/course/:course_name", async (req, res) => {
   const courses = await Database.deleteCourseByCourseName(
     req.params.course_name
   );
-  res.json(courses);
+  if (courses === null || courses === undefined) {
+    res.json({ message: "Course not deleted." });
+  } else {
+    res.json(courses);
+  }
 });
 
 // Get completed courses by user email

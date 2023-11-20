@@ -346,6 +346,7 @@ class Database {
   // Function to delete course by name
   async deleteCourseByCourseName(course_name) {
     try {
+      const course = await this.getCourseByCourseName(course_name);
       const result = await this.pool
         .request()
         .query(
@@ -353,8 +354,11 @@ class Database {
         );
       if (result.rowsAffected[0] === 1) {
         console.log("Course deleted successfully");
-      }
-      return result.recordset;
+        return course;
+      }else {
+        throw new Error("Course not deleted");
+      } 
+
     } catch (error) {
       console.log(error);
     }
