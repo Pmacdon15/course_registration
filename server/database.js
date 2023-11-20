@@ -70,11 +70,10 @@ class Database {
         );
       if (result.rowsAffected[0] === 1) {
         console.log("User registered successfully");
+        const user = await this.getUserInfoByEmail(email);
+        delete user[0].password;
+        return user;
       }
-      const user = await this.getUserInfoByEmail(email);
-
-      delete user[0].password;
-      return user;
     } catch (error) {
       console.log(error);
     }
@@ -90,10 +89,10 @@ class Database {
         );
       if (result.rowsAffected[0] === 1) {
         console.log("Admin registered successfully");
+        const user = await this.getUserInfoByEmail(email);
+        delete user[0].password;
+        return user;
       }
-      const user = await this.getUserInfoByEmail(email);
-      delete user[0].password;
-      return user;
     } catch (error) {
       console.log(error);
     }
@@ -128,9 +127,8 @@ class Database {
         .query(`DELETE FROM ${database}.dbo.users WHERE email = '${email}'`);
       if (result.rowsAffected[0] === 1) {
         console.log("User deleted successfully");
+        return user;
       }
-      
-      return user;
     } catch (error) {
       console.log(error);
     }
@@ -181,10 +179,9 @@ class Database {
 
       if (result.rowsAffected[0] === 1) {
         console.log("Program added successfully");
+        const program = await this.getProgramByProgramName(program_name);
+        return program;
       }
-      const program = await this.getProgramByProgramName(program_name);
-
-      return program;
     } catch (error) {
       console.log(error);
     }
@@ -209,9 +206,9 @@ class Database {
 
       if (result.rowsAffected[0] === 1) {
         console.log("Program edited successfully");
+        const program = await this.getProgramByProgramName(new_program_name);
+        return program;
       }
-
-      return result.recordset;
     } catch (error) {
       console.log(error);
     }

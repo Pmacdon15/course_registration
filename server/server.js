@@ -146,7 +146,11 @@ app.put("/program/:program_name", async (req, res) => {
     program_end_date,
     program_type
   );
-  res.json(programs);
+  if (programs === null || programs === undefined) {
+    res.json({ message: "Program not updated." });
+  } else {
+    res.json(programs);
+  }
 });
 
 // Delete program
@@ -212,7 +216,11 @@ app.put("/course/:course_name", async (req, res) => {
     course_description,
     course_prerequisites
   );
-  res.json(courses);
+  if (courses === null || courses === undefined) {
+    res.json({ message: "Course not updated." });
+  } else {
+    res.json(courses);
+  }
 });
 
 // Delete course by course name
