@@ -221,7 +221,7 @@ app.post("/course/:program_name", async (req, res) => {
     course_prerequisites
   );
   if (courses === null || courses === undefined) {
-    res.json({ message: "Course not created." });
+    res.status(400).send("Course not created." );
   } else {
     res.json(courses);
   }

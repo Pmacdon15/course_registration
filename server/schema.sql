@@ -25,22 +25,23 @@ CREATE TABLE programs (
 
 CREATE TABLE courses (
     course_id INT IDENTITY(1,1) PRIMARY KEY,
-    program_id INT FOREIGN KEY REFERENCES programs(program_id) ON DELETE CASCADE, 
+    program_id INT NOT NULL FOREIGN KEY REFERENCES programs(program_id) ON DELETE CASCADE, 
     course_code VARCHAR(100) UNIQUE NOT NULL,
-    course_name VARCHAR(100) NOT NULL,
+    course_name VARCHAR(100)  UNIQUE NOT NULL,
     course_term VARCHAR(100) NOT NULL,
     course_description VARCHAR(255) NOT NULL,
     course_prerequisites VARCHAR(255)
 );
 
+
 CREATE TABLE completed_courses (
     completed_course_id INT IDENTITY(1,1) PRIMARY KEY,
-    user_id INT,
+    user_id INT NOT NULL,
     course_id INT NOT NULL,
     course_code VARCHAR(100) NOT NULL,
     course_grade INT NOT NULL,
-    FOREIGN KEY (user_id) NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (course_id) NOT NULL REFERENCES courses(course_id) ON DELETE CASCADE
+    FOREIGN KEY (user_id)  REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE
 );
 
 INSERT INTO users (email, first_name, last_name, password, admin) 
@@ -59,9 +60,9 @@ VALUES
 -- Dummy data for the 'courses' table
 INSERT INTO courses (program_id, course_code, course_name, course_term, course_description, course_prerequisites)
 VALUES 
-    (1, 'CS101-01', 'Introduction to Programming', 'Fall 2023', 'Learn the basics of programming', NULL),
+    (1, 'CS101-01', 'Introduction to Programming', 'Fall 2023', 'Learn the basics of programming', 'nothing really'),
     (1, 'CS101-02', 'Database Management', 'Fall 2023', 'Introduction to database systems', 'CS101-01'),
-    (2, 'BA201-01', 'Marketing Fundamentals', 'Spring 2023', 'Principles of marketing', NULL),
+    (2, 'BA201-01', 'Marketing Fundamentals', 'Spring 2023', 'Principles of marketing', 'have at her'),
     (3, 'DS301-01', 'Machine Learning', 'Fall 2023', 'Introduction to machine learning', 'CS101-01');
 
 
