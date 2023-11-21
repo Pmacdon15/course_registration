@@ -148,6 +148,7 @@ class Database {
   // Function to delete user
   async deleteUser(email) {
     try {
+      // Find user b4 delete to return user info after successful delete
       const user = await this.getUserInfoByEmail(email);
       delete user[0].password;
       const result = await this.pool

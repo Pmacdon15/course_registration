@@ -80,8 +80,8 @@ app.put("/user/:email", async (req, res) => {
 
 // Delete user
 app.delete("/user/:email", async (req, res) => {
-  const users = await Database.deleteUser(req.params.email);
-  if (users === null || users === undefined) {
+  const user = await Database.deleteUser(req.params.email);
+  if (user === null || user === undefined) {
     res.status(400).send("User not deleted.");
   } else {
     res.status(200).json(user);
