@@ -29,9 +29,9 @@ app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const users = await Database.login(email, password);
   if (users === null || users === undefined) {
-    res.json("Invalid email or password" );
+    res.status(400).send("Invalid email or password" );
   } else {
-    res.json(users);
+    res.status(200).json(users);
   }
 });
 
@@ -45,7 +45,7 @@ app.post("/user", async (req, res) => {
     password
   );
   if (users === null || users === undefined) {
-    res.json("User not created" );
+    res.status(400).send("User not created" );
   } else {
     res.json(users);
   }
@@ -61,7 +61,7 @@ app.post("/userAdmin", async (req, res) => {
     password
   );
   if (users === null || users === undefined) {
-    res.json("User not created.");
+    res.status(400).send("User not created.");
   } else {
     res.json(users);
   }
@@ -70,8 +70,8 @@ app.post("/userAdmin", async (req, res) => {
 // Update password
 app.put("/user/:email", async (req, res) => {
   const { new_password } = req.body;
-  const users = await Database.updatePassword(req.params.email, new_password);
-  if (users === null || users === undefined) {
+  const user = await Database.updatePassword(req.params.email, new_password);
+  if (user === null || user === undefined) {
     res.status(400).send("Password not updated.");
   } else {
     res.status(200).json(user);

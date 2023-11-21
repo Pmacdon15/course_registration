@@ -63,7 +63,13 @@ class Database {
   // Function to register user
   async registerUser(email, first_name, last_name, password) {
     try {
-      if (email === undefined || first_name === undefined || last_name === undefined || password === undefined) {
+      //Protect from undefined parameters
+      if (
+        email === undefined ||
+        first_name === undefined ||
+        last_name === undefined ||
+        password === undefined
+      ) {
         throw new Error("Undefined parameters");
       }
       const result = await this.pool
@@ -85,7 +91,13 @@ class Database {
   // Function to add admin user
   async registerUserAdmin(email, first_name, last_name, password) {
     try {
-      if (email === undefined || first_name === undefined || last_name === undefined || password === undefined) {
+      // Protect from undefined parameters
+      if (
+        email === undefined ||
+        first_name === undefined ||
+        last_name === undefined ||
+        password === undefined
+      ) {
         throw new Error("Undefined parameters");
       }
       const result = await this.pool
@@ -107,22 +119,32 @@ class Database {
   // Function update password
   async updatePassword(email, new_password) {
     try {
+      // Protect from undefined parameters
+      if (new_password === undefined) {
+        throw new Error("Undefined parameters 'new_password' ");
+      }
+      // Execute query
       const result = await this.pool
         .request()
         .query(
           `UPDATE ${database}.dbo.users SET password = '${new_password}' WHERE email = '${email}'`
         );
+      // Check if the password was updated
       if (result.rowsAffected[0] === 1) {
+        // If password was updated, return the user info with out the password
         console.log("Password updated successfully");
+        const user = await this.getUserInfoByEmail(email);
+        delete user[0].password;
+        console.log(
+          "Password for user " + user[0].email + " updated successfully"
+        );
+        return user;
       }
-      const user = await this.getUserInfoByEmail(email);
-      delete user[0].password;
-      //user[0].message = "Password updated successfully";
-      return user;
     } catch (error) {
       console.log(error);
     }
   }
+
   // Function to delete user
   async deleteUser(email) {
     try {
@@ -343,7 +365,7 @@ class Database {
         console.log("Course edited successfully");
         const course = await this.getCourseByCourseName(new_course_name);
         return course;
-      }      
+      }
     } catch (error) {
       console.log(error);
     }
@@ -361,10 +383,9 @@ class Database {
       if (result.rowsAffected[0] === 1) {
         console.log("Course deleted successfully");
         return course;
-      }else {
+      } else {
         throw new Error("Course not deleted");
-      } 
-
+      }
     } catch (error) {
       console.log(error);
     }
@@ -404,9 +425,11 @@ class Database {
 
       if (result.rowsAffected[0] === 1) {
         console.log("Completed course added successfully");
-        const completedCourse = await this.getCompletedCoursesByUserEmail(email);
-        return completedCourse;          
-      }      
+        const completedCourse = await this.getCompletedCoursesByUserEmail(
+          email
+        );
+        return completedCourse;
+      }
     } catch (error) {
       console.log(error);
     }
