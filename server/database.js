@@ -111,7 +111,7 @@ class Database {
         .query(
           `INSERT INTO ${database}.dbo.users (email, first_name, last_name, password, admin) VALUES ('${email}', '${first_name}', '${last_name}', '${password}', 'true' )`
         );
-        // Check if the user was registered
+      // Check if the user was registered
       if (result.rowsAffected[0] === 1) {
         console.log("Admin registered successfully");
         const user = await this.getUserInfoByEmail(email);
@@ -293,9 +293,9 @@ class Database {
         .query(
           `SELECT * FROM ${database}.dbo.courses WHERE course_name = '${course_name}'`
         );
-        if (result.recordset.length === 0) {
-          throw new Error("Course not found");
-        }
+      if (result.recordset.length === 0) {
+        throw new Error("Course not found");
+      }
       return result.recordset;
     } catch (error) {
       console.log(error);
@@ -310,9 +310,9 @@ class Database {
         .query(
           `SELECT * FROM ${database}.dbo.courses WHERE program_id IN (SELECT program_id FROM ${database}.dbo.programs WHERE program_name = '${program_name}')`
         );
-        if (result.recordset.length === 0) {
-          throw new Error("Courses not found");
-        }
+      if (result.recordset.length === 0) {
+        throw new Error("Courses not found");
+      }
       return result.recordset;
     } catch (error) {
       console.log(error);
@@ -328,7 +328,6 @@ class Database {
     course_description,
     course_prerequisites
   ) {
-  
     try {
       if (
         program_name === undefined ||
@@ -352,18 +351,16 @@ class Database {
             '${course_prerequisites}'
           )
         `);
-        if (result.rowsAffected[0] === 0) {
-          throw new Error("Course not created");
-        }
-        const course = await this.getCourseByCourseName(course_name);
-        return course;
-    }
-    catch (error) {
+      if (result.rowsAffected[0] === 0) {
+        throw new Error("Course not created");
+      }
+      const course = await this.getCourseByCourseName(course_name);
+      return course;
+    } catch (error) {
       console.log(error);
     }
   }
 
-  
   // Function to edit course by name
   async editCourseByCourseName(
     course_name,
@@ -374,6 +371,15 @@ class Database {
     course_prerequisites
   ) {
     try {
+      if (
+        new_course_name === undefined ||
+        course_code === undefined ||
+        course_term === undefined ||
+        course_description === undefined ||
+        course_prerequisites === undefined
+      ) {
+        throw new Error("Undefined parameters");
+      }
       const result = await this.pool.request().query(`
           UPDATE ${database}.dbo.courses 
           SET course_name = '${new_course_name}', course_code = '${course_code}', course_term = '${course_term}', course_description = '${course_description}', course_prerequisites = '${course_prerequisites}'

@@ -245,7 +245,7 @@ app.put("/course/:course_name", async (req, res) => {
     course_prerequisites
   );
   if (courses === null || courses === undefined) {
-    res.json({ message: "Course not updated." });
+    res.status(400).send("Course not updated.");
   } else {
     res.json(courses);
   }

@@ -60,9 +60,9 @@ VALUES
 -- Dummy data for the 'courses' table
 INSERT INTO courses (program_id, course_code, course_name, course_term, course_description, course_prerequisites)
 VALUES 
-    (1, 'CS101-01', 'Introduction to Programming', 'Fall 2023', 'Learn the basics of programming', 'nothing really'),
+    (1, 'CS101-01', 'Introduction to Programming', 'Fall 2023', 'Learn the basics of programming', 'NA'),
     (1, 'CS101-02', 'Database Management', 'Fall 2023', 'Introduction to database systems', 'CS101-01'),
-    (2, 'BA201-01', 'Marketing Fundamentals', 'Spring 2023', 'Principles of marketing', 'have at her'),
+    (2, 'BA201-01', 'Marketing Fundamentals', 'Spring 2023', 'Principles of marketing', 'NA'),
     (3, 'DS301-01', 'Machine Learning', 'Fall 2023', 'Introduction to machine learning', 'CS101-01');
 
 
