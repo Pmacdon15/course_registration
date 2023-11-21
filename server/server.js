@@ -257,7 +257,7 @@ app.delete("/course/:course_name", async (req, res) => {
     req.params.course_name
   );
   if (courses === null || courses === undefined) {
-    res.json({ message: "Course not deleted." });
+    res.status(400).send("Course not deleted.");
   } else {
     res.json(courses);
   }
