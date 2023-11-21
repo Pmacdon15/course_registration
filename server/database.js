@@ -34,11 +34,13 @@ class Database {
 
   async login(email, password) {
     try {
+      // Attempt to login
       const result = await this.pool
         .request()
         .query(
           `SELECT * FROM ${database}.dbo.users WHERE email= '${email}' AND password = '${password}'`
         );
+      // Remove password from result
       delete result.recordset[0].password;
       //console.dir(result.recordset);
       console.log("User logged in successfully");
@@ -72,14 +74,17 @@ class Database {
       ) {
         throw new Error("Undefined parameters");
       }
+      // Execute query
       const result = await this.pool
         .request()
         .query(
           `INSERT INTO ${database}.dbo.users (email, first_name, last_name, password, admin) VALUES ('${email}', '${first_name}', '${last_name}', '${password}', 'false' )`
         );
+      // Check if the user was registered
       if (result.rowsAffected[0] === 1) {
         console.log("User registered successfully");
         const user = await this.getUserInfoByEmail(email);
+        // Remove password from result
         delete user[0].password;
         return user;
       }
@@ -100,11 +105,13 @@ class Database {
       ) {
         throw new Error("Undefined parameters");
       }
+      // Execute query
       const result = await this.pool
         .request()
         .query(
           `INSERT INTO ${database}.dbo.users (email, first_name, last_name, password, admin) VALUES ('${email}', '${first_name}', '${last_name}', '${password}', 'true' )`
         );
+        // Check if the user was registered
       if (result.rowsAffected[0] === 1) {
         console.log("Admin registered successfully");
         const user = await this.getUserInfoByEmail(email);
@@ -134,6 +141,7 @@ class Database {
         // If password was updated, return the user info with out the password
         console.log("Password updated successfully");
         const user = await this.getUserInfoByEmail(email);
+        // Remove password from result
         delete user[0].password;
         console.log(
           "Password for user " + user[0].email + " updated successfully"
@@ -150,10 +158,13 @@ class Database {
     try {
       // Find user b4 delete to return user info after successful delete
       const user = await this.getUserInfoByEmail(email);
+      // Remove password from result
       delete user[0].password;
+      // Execute query
       const result = await this.pool
         .request()
         .query(`DELETE FROM ${database}.dbo.users WHERE email = '${email}'`);
+      // Check if the user was deleted and return user info
       if (result.rowsAffected[0] === 1) {
         console.log("User deleted successfully");
         return user;
