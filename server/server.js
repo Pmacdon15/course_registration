@@ -29,7 +29,7 @@ app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const users = await Database.login(email, password);
   if (users === null || users === undefined) {
-    res.json({ message: "Invalid email or password" });
+    res.json("Invalid email or password" );
   } else {
     res.json(users);
   }
@@ -45,7 +45,7 @@ app.post("/user", async (req, res) => {
     password
   );
   if (users === null || users === undefined) {
-    res.json({ message: "User not created" });
+    res.json("User not created" );
   } else {
     res.json(users);
   }
@@ -61,7 +61,7 @@ app.post("/userAdmin", async (req, res) => {
     password
   );
   if (users === null || users === undefined) {
-    res.json({ message: "User not created." });
+    res.json("User not created.");
   } else {
     res.json(users);
   }
@@ -72,9 +72,9 @@ app.put("/user/:email", async (req, res) => {
   const { new_password } = req.body;
   const users = await Database.updatePassword(req.params.email, new_password);
   if (users === null || users === undefined) {
-    res.json({ message: "Password not updated." });
+    res.status(400).send("Password not updated.");
   } else {
-    res.json(users);
+    res.status(200).json(user);
   }
 });
 
@@ -82,16 +82,20 @@ app.put("/user/:email", async (req, res) => {
 app.delete("/user/:email", async (req, res) => {
   const users = await Database.deleteUser(req.params.email);
   if (users === null || users === undefined) {
-    res.json({ message: "User not deleted." });
+    res.status(400).send("User not deleted.");
   } else {
-    res.json(users);
+    res.status(200).json(user);
   }
 });
 
 // Get all programs
 app.get("/programs", async (req, res) => {
   const programs = await Database.getPrograms();
-  res.json(programs);
+  if (programs === null || programs === undefined) {
+    res.status(400).send("Programs not found.");
+  } else {
+    res.status(200).json(programs);
+  }
 });
 
 // Get program by program name
@@ -99,7 +103,11 @@ app.get("/program/:program_name", async (req, res) => {
   const programs = await Database.getProgramByProgramName(
     req.params.program_name
   );
-  res.json(programs);
+  if (programs === null || programs === undefined) {
+    res.status(400).send("Program not found.");
+  } else {
+    res.status(200).json(programs);
+  }
 });
 
 // Add program
@@ -121,9 +129,9 @@ app.post("/program", async (req, res) => {
     program_type
   );
   if (programs === null || programs === undefined) {
-    res.json({ message: "Program not created." });
+    res.status(400).send("Program not created.");
   } else {
-    res.json(programs);
+    res.status(200).json(programs);
   }
 });
 
@@ -147,9 +155,9 @@ app.put("/program/:program_name", async (req, res) => {
     program_type
   );
   if (programs === null || programs === undefined) {
-    res.json({ message: "Program not updated." });
+    res.status(400).send("Program not updated.");
   } else {
-    res.json(programs);
+    res.status(200).json(programs);
   }
 });
 
@@ -157,16 +165,20 @@ app.put("/program/:program_name", async (req, res) => {
 app.delete("/program/:program_name", async (req, res) => {
   const programs = await Database.deleteProgram(req.params.program_name);
   if (programs === null || programs === undefined) {
-    res.json({ message: "Program not deleted." });
+    res.status(400).send("Program not deleted.");
   } else {
-    res.json(programs);
+    res.status(200).json(programs);
   }
 });
 
 // Get all courses
 app.get("/courses", async (req, res) => {
   const courses = await Database.getCourses();
-  res.json(courses);
+  if (courses === null || courses === undefined) {
+    res.status(400).send("Courses not found.");
+  } else {
+    res.json(courses);
+  }
 });
 
 // Get course by course name
@@ -203,7 +215,7 @@ app.post("/course/:program_name", async (req, res) => {
   if (courses === null || courses === undefined) {
     res.json({ message: "Course not created." });
   } else {
-  res.json(courses);
+    res.json(courses);
   }
 });
 

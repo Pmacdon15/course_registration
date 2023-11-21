@@ -63,6 +63,9 @@ class Database {
   // Function to register user
   async registerUser(email, first_name, last_name, password) {
     try {
+      if (email === undefined || first_name === undefined || last_name === undefined || password === undefined) {
+        throw new Error("Undefined parameters");
+      }
       const result = await this.pool
         .request()
         .query(
@@ -82,6 +85,9 @@ class Database {
   // Function to add admin user
   async registerUserAdmin(email, first_name, last_name, password) {
     try {
+      if (email === undefined || first_name === undefined || last_name === undefined || password === undefined) {
+        throw new Error("Undefined parameters");
+      }
       const result = await this.pool
         .request()
         .query(
