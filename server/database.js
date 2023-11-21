@@ -293,6 +293,9 @@ class Database {
         .query(
           `SELECT * FROM ${database}.dbo.courses WHERE course_name = '${course_name}'`
         );
+        if (result.recordset.length === 0) {
+          throw new Error("Course not found");
+        }
       return result.recordset;
     } catch (error) {
       console.log(error);
@@ -307,6 +310,9 @@ class Database {
         .query(
           `SELECT * FROM ${database}.dbo.courses WHERE program_id IN (SELECT program_id FROM ${database}.dbo.programs WHERE program_name = '${program_name}')`
         );
+        if (result.recordset.length === 0) {
+          throw new Error("Courses not found");
+        }
       return result.recordset;
     } catch (error) {
       console.log(error);

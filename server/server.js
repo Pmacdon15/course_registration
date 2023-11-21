@@ -183,8 +183,12 @@ app.get("/courses", async (req, res) => {
 
 // Get course by course name
 app.get("/course/:course_name", async (req, res) => {
-  const courses = await Database.getCourseByCourseName(req.params.course_name);
-  res.json(courses);
+  const course = await Database.getCourseByCourseName(req.params.course_name);
+  if (course === null || course === undefined) {
+    res.status(400).send("Course not found.");
+  } else {
+    res.json(course);
+  }
 });
 
 // Get courses by program name
@@ -192,7 +196,11 @@ app.get("/courses/:program_name", async (req, res) => {
   const courses = await Database.getCoursesByProgramName(
     req.params.program_name
   );
-  res.json(courses);
+  if (courses === null || courses === undefined) {
+    res.status(400).send("Courses not found.");
+  } else {
+    res.json(courses);
+  }
 });
 
 // Add course by program name
