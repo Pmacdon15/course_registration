@@ -424,6 +424,9 @@ class Database {
         .query(
           `SELECT * FROM ${database}.dbo.completed_courses WHERE user_id IN (SELECT user_id FROM ${database}.dbo.users WHERE email = '${email}')`
         );
+        if (result.recordset.length === 0) {
+          throw new Error("Courses not found");
+        }
       return result.recordset;
     } catch (error) {
       console.log(error);

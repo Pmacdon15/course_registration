@@ -268,7 +268,11 @@ app.get("/completed_courses/:user_email", async (req, res) => {
   const courses = await Database.getCompletedCoursesByUserEmail(
     req.params.user_email
   );
-  res.json(courses);
+  if (courses === null || courses === undefined) {
+    res.status(400).send("Courses not found.");
+  } else {
+    res.json(courses);
+  }
 });
 
 // Add completed course by user email and course name
