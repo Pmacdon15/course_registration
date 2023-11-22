@@ -29,9 +29,9 @@ app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const users = await Database.login(email, password);
   if (users === null || users === undefined) {
-    res.json({ message: "Invalid email or password" });
+    res.status(400).send("Invalid email or password" );
   } else {
-    res.json(users);
+    res.status(200).json(users);
   }
 });
 
@@ -45,7 +45,7 @@ app.post("/user", async (req, res) => {
     password
   );
   if (users === null || users === undefined) {
-    res.json({ message: "User not created" });
+    res.status(400).send("User not created" );
   } else {
     res.json(users);
   }
@@ -61,7 +61,7 @@ app.post("/userAdmin", async (req, res) => {
     password
   );
   if (users === null || users === undefined) {
-    res.json({ message: "User not created." });
+    res.status(400).send("User not created.");
   } else {
     res.json(users);
   }
@@ -70,28 +70,32 @@ app.post("/userAdmin", async (req, res) => {
 // Update password
 app.put("/user/:email", async (req, res) => {
   const { new_password } = req.body;
-  const users = await Database.updatePassword(req.params.email, new_password);
-  if (users === null || users === undefined) {
-    res.json({ message: "Password not updated." });
+  const user = await Database.updatePassword(req.params.email, new_password);
+  if (user === null || user === undefined) {
+    res.status(400).send("Password not updated.");
   } else {
-    res.json(users);
+    res.status(200).json(user);
   }
 });
 
 // Delete user
 app.delete("/user/:email", async (req, res) => {
-  const users = await Database.deleteUser(req.params.email);
-  if (users === null || users === undefined) {
-    res.json({ message: "User not deleted." });
+  const user = await Database.deleteUser(req.params.email);
+  if (user === null || user === undefined) {
+    res.status(400).send("User not deleted.");
   } else {
-    res.json(users);
+    res.status(200).json(user);
   }
 });
 
 // Get all programs
 app.get("/programs", async (req, res) => {
   const programs = await Database.getPrograms();
-  res.json(programs);
+  if (programs === null || programs === undefined) {
+    res.status(400).send("Programs not found.");
+  } else {
+    res.status(200).json(programs);
+  }
 });
 
 // Get program by program name
@@ -99,7 +103,11 @@ app.get("/program/:program_name", async (req, res) => {
   const programs = await Database.getProgramByProgramName(
     req.params.program_name
   );
-  res.json(programs);
+  if (programs === null || programs === undefined) {
+    res.status(400).send("Program not found.");
+  } else {
+    res.status(200).json(programs);
+  }
 });
 
 // Add program
@@ -121,9 +129,9 @@ app.post("/program", async (req, res) => {
     program_type
   );
   if (programs === null || programs === undefined) {
-    res.json({ message: "Program not created." });
+    res.status(400).send("Program not created.");
   } else {
-    res.json(programs);
+    res.status(200).json(programs);
   }
 });
 
@@ -147,9 +155,9 @@ app.put("/program/:program_name", async (req, res) => {
     program_type
   );
   if (programs === null || programs === undefined) {
-    res.json({ message: "Program not updated." });
+    res.status(400).send("Program not updated.");
   } else {
-    res.json(programs);
+    res.status(200).json(programs);
   }
 });
 
@@ -157,22 +165,30 @@ app.put("/program/:program_name", async (req, res) => {
 app.delete("/program/:program_name", async (req, res) => {
   const programs = await Database.deleteProgram(req.params.program_name);
   if (programs === null || programs === undefined) {
-    res.json({ message: "Program not deleted." });
+    res.status(400).send("Program not deleted.");
   } else {
-    res.json(programs);
+    res.status(200).json(programs);
   }
 });
 
 // Get all courses
 app.get("/courses", async (req, res) => {
   const courses = await Database.getCourses();
-  res.json(courses);
+  if (courses === null || courses === undefined) {
+    res.status(400).send("Courses not found.");
+  } else {
+    res.json(courses);
+  }
 });
 
 // Get course by course name
 app.get("/course/:course_name", async (req, res) => {
-  const courses = await Database.getCourseByCourseName(req.params.course_name);
-  res.json(courses);
+  const course = await Database.getCourseByCourseName(req.params.course_name);
+  if (course === null || course === undefined) {
+    res.status(400).send("Course not found.");
+  } else {
+    res.json(course);
+  }
 });
 
 // Get courses by program name
@@ -180,7 +196,11 @@ app.get("/courses/:program_name", async (req, res) => {
   const courses = await Database.getCoursesByProgramName(
     req.params.program_name
   );
-  res.json(courses);
+  if (courses === null || courses === undefined) {
+    res.status(400).send("Courses not found.");
+  } else {
+    res.json(courses);
+  }
 });
 
 // Add course by program name
@@ -201,9 +221,9 @@ app.post("/course/:program_name", async (req, res) => {
     course_prerequisites
   );
   if (courses === null || courses === undefined) {
-    res.json({ message: "Course not created." });
+    res.status(400).send("Course not created." );
   } else {
-  res.json(courses);
+    res.json(courses);
   }
 });
 
@@ -225,7 +245,7 @@ app.put("/course/:course_name", async (req, res) => {
     course_prerequisites
   );
   if (courses === null || courses === undefined) {
-    res.json({ message: "Course not updated." });
+    res.status(400).send("Course not updated.");
   } else {
     res.json(courses);
   }
@@ -237,7 +257,7 @@ app.delete("/course/:course_name", async (req, res) => {
     req.params.course_name
   );
   if (courses === null || courses === undefined) {
-    res.json({ message: "Course not deleted." });
+    res.status(400).send("Course not deleted.");
   } else {
     res.json(courses);
   }
@@ -248,7 +268,11 @@ app.get("/completed_courses/:user_email", async (req, res) => {
   const courses = await Database.getCompletedCoursesByUserEmail(
     req.params.user_email
   );
-  res.json(courses);
+  if (courses === null || courses === undefined) {
+    res.status(400).send("Courses not found.");
+  } else {
+    res.json(courses);
+  }
 });
 
 // Add completed course by user email and course name
@@ -260,7 +284,7 @@ app.post("/completed_course/:user_email/:course_name", async (req, res) => {
     course_grade
   );
   if (courses === null || courses === undefined) {
-    res.json({ message: "Course not added." });
+    res.status(400).send("Course not added.");
   } else {
     res.json(courses);
   }

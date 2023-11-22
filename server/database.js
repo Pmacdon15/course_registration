@@ -34,11 +34,13 @@ class Database {
 
   async login(email, password) {
     try {
+      // Attempt to login
       const result = await this.pool
         .request()
         .query(
           `SELECT * FROM ${database}.dbo.users WHERE email= '${email}' AND password = '${password}'`
         );
+      // Remove password from result
       delete result.recordset[0].password;
       //console.dir(result.recordset);
       console.log("User logged in successfully");
@@ -63,14 +65,26 @@ class Database {
   // Function to register user
   async registerUser(email, first_name, last_name, password) {
     try {
+      //Protect from undefined parameters
+      if (
+        email === undefined ||
+        first_name === undefined ||
+        last_name === undefined ||
+        password === undefined
+      ) {
+        throw new Error("Undefined parameters");
+      }
+      // Execute query
       const result = await this.pool
         .request()
         .query(
           `INSERT INTO ${database}.dbo.users (email, first_name, last_name, password, admin) VALUES ('${email}', '${first_name}', '${last_name}', '${password}', 'false' )`
         );
+      // Check if the user was registered
       if (result.rowsAffected[0] === 1) {
         console.log("User registered successfully");
         const user = await this.getUserInfoByEmail(email);
+        // Remove password from result
         delete user[0].password;
         return user;
       }
@@ -82,11 +96,22 @@ class Database {
   // Function to add admin user
   async registerUserAdmin(email, first_name, last_name, password) {
     try {
+      // Protect from undefined parameters
+      if (
+        email === undefined ||
+        first_name === undefined ||
+        last_name === undefined ||
+        password === undefined
+      ) {
+        throw new Error("Undefined parameters");
+      }
+      // Execute query
       const result = await this.pool
         .request()
         .query(
           `INSERT INTO ${database}.dbo.users (email, first_name, last_name, password, admin) VALUES ('${email}', '${first_name}', '${last_name}', '${password}', 'true' )`
         );
+      // Check if the user was registered
       if (result.rowsAffected[0] === 1) {
         console.log("Admin registered successfully");
         const user = await this.getUserInfoByEmail(email);
@@ -101,30 +126,45 @@ class Database {
   // Function update password
   async updatePassword(email, new_password) {
     try {
+      // Protect from undefined parameters
+      if (new_password === undefined) {
+        throw new Error("Undefined parameters 'new_password' ");
+      }
+      // Execute query
       const result = await this.pool
         .request()
         .query(
           `UPDATE ${database}.dbo.users SET password = '${new_password}' WHERE email = '${email}'`
         );
+      // Check if the password was updated
       if (result.rowsAffected[0] === 1) {
+        // If password was updated, return the user info with out the password
         console.log("Password updated successfully");
+        const user = await this.getUserInfoByEmail(email);
+        // Remove password from result
+        delete user[0].password;
+        console.log(
+          "Password for user " + user[0].email + " updated successfully"
+        );
+        return user;
       }
-      const user = await this.getUserInfoByEmail(email);
-      delete user[0].password;
-      //user[0].message = "Password updated successfully";
-      return user;
     } catch (error) {
       console.log(error);
     }
   }
+
   // Function to delete user
   async deleteUser(email) {
     try {
+      // Find user b4 delete to return user info after successful delete
       const user = await this.getUserInfoByEmail(email);
+      // Remove password from result
       delete user[0].password;
+      // Execute query
       const result = await this.pool
         .request()
         .query(`DELETE FROM ${database}.dbo.users WHERE email = '${email}'`);
+      // Check if the user was deleted and return user info
       if (result.rowsAffected[0] === 1) {
         console.log("User deleted successfully");
         return user;
@@ -253,6 +293,9 @@ class Database {
         .query(
           `SELECT * FROM ${database}.dbo.courses WHERE course_name = '${course_name}'`
         );
+      if (result.recordset.length === 0) {
+        throw new Error("Course not found");
+      }
       return result.recordset;
     } catch (error) {
       console.log(error);
@@ -267,6 +310,9 @@ class Database {
         .query(
           `SELECT * FROM ${database}.dbo.courses WHERE program_id IN (SELECT program_id FROM ${database}.dbo.programs WHERE program_name = '${program_name}')`
         );
+      if (result.recordset.length === 0) {
+        throw new Error("Courses not found");
+      }
       return result.recordset;
     } catch (error) {
       console.log(error);
@@ -283,37 +329,35 @@ class Database {
     course_prerequisites
   ) {
     try {
-      // Step 1: Check if the program_name exists
-      const programResult = await this.pool.request().query(`
-      SELECT program_id FROM ${database}.dbo.programs WHERE program_name = '${program_name}'
-    `);
-
-      // Step 2: If program_name exists, retrieve program_id and insert into courses table
-      if (programResult.recordset.length > 0) {
-        const program_id = programResult.recordset[0].program_id;
-
-        // Step 3: Insert into courses table
-        const result = await this.pool.request().query(`
-        INSERT INTO ${database}.dbo.courses 
-        (program_id, course_code, course_name, course_term, course_description, course_prerequisites) 
-        VALUES 
-        (${program_id}, '${course_code}', '${course_name}', '${course_term}', '${course_description}', '${course_prerequisites}')
-      `);
-
-        // Step 4: Check if the insertion was successful
-        if (result.rowsAffected[0] === 1) {
-          console.log("Course added successfully");
-          const course = await this.getCourseByCourseName(course_name);
-          return course;
-        }
-      } else {
-        // Handle the case where program_name is not found (e.g., throw an error)
-        throw new Error(
-          `Program with name '${program_name}' not found in the database.`
-        );
+      if (
+        program_name === undefined ||
+        course_code === undefined ||
+        course_name === undefined ||
+        course_term === undefined ||
+        course_description === undefined ||
+        course_prerequisites === undefined
+      ) {
+        throw new Error("Undefined parameters");
       }
+      const result = await this.pool.request().query(`
+          INSERT INTO ${database}.dbo.courses
+          (program_id, course_code, course_name, course_term, course_description, course_prerequisites)
+          VALUES (
+            (SELECT program_id FROM ${database}.dbo.programs WHERE program_name = '${program_name}'),
+            '${course_code}',
+            '${course_name}',
+            '${course_term}',
+            '${course_description}',
+            '${course_prerequisites}'
+          )
+        `);
+      if (result.rowsAffected[0] === 0) {
+        throw new Error("Course not created");
+      }
+      const course = await this.getCourseByCourseName(course_name);
+      return course;
     } catch (error) {
-      console.error("Error:", error.message);
+      console.log(error);
     }
   }
 
@@ -327,6 +371,15 @@ class Database {
     course_prerequisites
   ) {
     try {
+      if (
+        new_course_name === undefined ||
+        course_code === undefined ||
+        course_term === undefined ||
+        course_description === undefined ||
+        course_prerequisites === undefined
+      ) {
+        throw new Error("Undefined parameters");
+      }
       const result = await this.pool.request().query(`
           UPDATE ${database}.dbo.courses 
           SET course_name = '${new_course_name}', course_code = '${course_code}', course_term = '${course_term}', course_description = '${course_description}', course_prerequisites = '${course_prerequisites}'
@@ -337,7 +390,7 @@ class Database {
         console.log("Course edited successfully");
         const course = await this.getCourseByCourseName(new_course_name);
         return course;
-      }      
+      }
     } catch (error) {
       console.log(error);
     }
@@ -355,10 +408,9 @@ class Database {
       if (result.rowsAffected[0] === 1) {
         console.log("Course deleted successfully");
         return course;
-      }else {
+      } else {
         throw new Error("Course not deleted");
-      } 
-
+      }
     } catch (error) {
       console.log(error);
     }
@@ -372,6 +424,9 @@ class Database {
         .query(
           `SELECT * FROM ${database}.dbo.completed_courses WHERE user_id IN (SELECT user_id FROM ${database}.dbo.users WHERE email = '${email}')`
         );
+        if (result.recordset.length === 0) {
+          throw new Error("Courses not found");
+        }
       return result.recordset;
     } catch (error) {
       console.log(error);
@@ -398,9 +453,11 @@ class Database {
 
       if (result.rowsAffected[0] === 1) {
         console.log("Completed course added successfully");
-        const completedCourse = await this.getCompletedCoursesByUserEmail(email);
-        return completedCourse;          
-      }      
+        const completedCourse = await this.getCompletedCoursesByUserEmail(
+          email
+        );
+        return completedCourse;
+      }
     } catch (error) {
       console.log(error);
     }
