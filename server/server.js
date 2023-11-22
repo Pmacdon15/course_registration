@@ -284,7 +284,7 @@ app.post("/completed_course/:user_email/:course_name", async (req, res) => {
     course_grade
   );
   if (courses === null || courses === undefined) {
-    res.json({ message: "Course not added." });
+    res.status(400).send("Course not added.");
   } else {
     res.json(courses);
   }
